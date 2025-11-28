@@ -9,51 +9,82 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Kaisei+HarunoUmi&display=swap" rel="stylesheet">
 
-  <title>2025 FNC KINGDOM グッズ計算</title>
+  <title>心盗夜 グッズ計算</title>
   <style>
-    .banner { width: 100%; height: auto; display: block; }
     body { font-family: 'Kaisei HarunoUmi', sans-serif; margin:0; padding:0; background:linear-gradient(to bottom right, #f9f9f9, #ececec); color:#333; }
     h1 { text-align:center; font-size:2rem; margin:30px 0 20px; color:#222; }
+    .banner { width: 100%; height: auto; display: block; }
+
+    /* グッズリスト */
     #goods-list {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr); /* どの画面でも2列固定 */
-  gap: 15px; /* カード間の隙間 */
-  padding: 20px;
-  max-width: 1000px;
-  margin: 0 auto;
-  box-sizing: border-box;
-}
+      display: grid;
+      grid-template-columns: repeat(2, 1fr); /* 常に2列固定 */
+      gap: 15px;
+      padding: 20px;
+      max-width: 1000px;
+      margin: 0 auto;
+      box-sizing: border-box;
+    }
 
-.goods-card {
-  width: 100%; /* グリッドセルいっぱいに広げる */
-  box-sizing: border-box;
-}
+    .item {
+      width: 100%; /* セル幅に合わせる */
+      box-sizing: border-box;
+      background:#fff;
+      border-radius:16px;
+      box-shadow:0 4px 12px rgba(0,0,0,0.1);
+      padding:15px;
+      transition:transform 0.2s;
+      min-width: 140px; /* 小さい画面で小さくなりすぎない */
+    }
 
-.goods-card img {
-  width: 100%;
-  height: auto; /* 縦横比を維持 */
-  display: block;
-  border-radius: 8px; /* 好みで角丸 */
-}
-
-/* もしスマホでカードを少し小さく見せたい場合はメディアクエリ */
-@media (max-width: 400px) {
-  #goods-list {
-    gap: 10px;
-  }
-}
-    .item { background:#fff; border-radius:16px; box-shadow:0 4px 12px rgba(0,0,0,0.1); padding:15px; transition:transform 0.2s; }
     .item:hover { transform:translateY(-4px); }
+
+    .item img {
+      width: 100%;  /* セル幅にフィット */
+      height: auto; /* 縦横比を維持 */
+      display: block;
+      border-radius:12px;
+    }
+
     .item-name { font-weight:bold; font-size:1rem; margin:8px 0; color:#333; }
     .item-price { color:#555; margin-bottom:8px; font-size:0.95rem; }
     .item-type-group { margin-bottom:8px; }
     .item-type-group div { margin-bottom:4px; }
     .item-type-group label { margin-right:6px; }
     .item-qty { width:50px; text-align:center; font-size:0.95rem; border:1px solid #ccc; border-radius:6px; padding:2px 4px; }
-    #total { margin:40px auto 10px; text-align:center; font-size:1.5em; font-weight:bold; background:#fff; border:2px solid #ccc; border-radius:12px; padding:20px; max-width:400px; box-shadow:0 4px 10px rgba(0,0,0,0.1); }
-    #summary { max-width:600px; margin:0 auto 50px; background:#fff; padding:20px; border-radius:10px; border:1px solid #ccc; box-shadow:0 3px 8px rgba(0,0,0,0.1); font-size:0.95rem; }
+
+    /* 合計欄 */
+    #total {
+      margin:40px auto 10px;
+      text-align:center;
+      font-size:1.5em;
+      font-weight:bold;
+      background:#fff;
+      border:2px solid #ccc;
+      border-radius:12px;
+      padding:20px;
+      max-width:400px;
+      box-shadow:0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    /* 選択内容 */
+    #summary {
+      max-width:600px;
+      margin:0 auto 50px;
+      background:#fff;
+      padding:20px;
+      border-radius:10px;
+      border:1px solid #ccc;
+      box-shadow:0 3px 8px rgba(0,0,0,0.1);
+      font-size:0.95rem;
+    }
     #summary h2 { margin-top:0; font-size:1.2rem; border-bottom:1px solid #ddd; padding-bottom:8px; }
     .summary-item { margin:6px 0; padding:6px 0; border-bottom:1px dashed #ddd; }
+
+    /* 極端に狭いスマホ用 */
+    @media (max-width: 320px) {
+      .item { min-width: 130px; }
+    }
   </style>
 </head>
 <body>
@@ -61,7 +92,7 @@
     <img src="images/IMG_banner.JPG" alt="サイトのバナー" class="banner">
   </header>
 
-  <h1>2025FNC KINGDOM グッズ計算</h1>
+  <h1>心盗夜 グッズ計算</h1>
 
   <div id="goods-list"></div>
 
@@ -74,17 +105,9 @@
 
   <script>
     const imageUrls = [
-      "images/IMG_001.JPG",
-      "images/IMG_002.JPG",
-      "images/IMG_003.JPG",
-      "images/IMG_004.JPG",
-      "images/IMG_005.JPG",
-      "images/IMG_006.JPG",
-      "images/IMG_007.JPG",
-      "images/IMG_008.JPG",
-      "images/IMG_009.JPG",
-      "images/IMG_0010.JPG",
-      "images/IMG_0011.JPG"
+      "images/IMG_001.JPG","images/IMG_002.JPG","images/IMG_003.JPG","images/IMG_004.JPG",
+      "images/IMG_005.JPG","images/IMG_006.JPG","images/IMG_007.JPG","images/IMG_008.JPG",
+      "images/IMG_009.JPG","images/IMG_0010.JPG","images/IMG_0011.JPG"
     ];
 
     const goods = [
