@@ -9,12 +9,39 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Kaisei+HarunoUmi&display=swap" rel="stylesheet">
 
-  <title>心盗夜 グッズ計算</title>
+  <title>2025 FNC KINGDOM グッズ計算</title>
   <style>
     .banner { width: 100%; height: auto; display: block; }
     body { font-family: 'Kaisei HarunoUmi', sans-serif; margin:0; padding:0; background:linear-gradient(to bottom right, #f9f9f9, #ececec); color:#333; }
     h1 { text-align:center; font-size:2rem; margin:30px 0 20px; color:#222; }
-    #goods-list { display:grid; grid-template-columns: repeat(2,1fr); gap:20px; padding:20px 30px 40px; max-width:1000px; margin:0 auto; box-sizing:border-box; }
+    #goods-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* どの画面でも2列固定 */
+  gap: 15px; /* カード間の隙間 */
+  padding: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.goods-card {
+  width: 100%; /* グリッドセルいっぱいに広げる */
+  box-sizing: border-box;
+}
+
+.goods-card img {
+  width: 100%;
+  height: auto; /* 縦横比を維持 */
+  display: block;
+  border-radius: 8px; /* 好みで角丸 */
+}
+
+/* もしスマホでカードを少し小さく見せたい場合はメディアクエリ */
+@media (max-width: 400px) {
+  #goods-list {
+    gap: 10px;
+  }
+}
     .item { background:#fff; border-radius:16px; box-shadow:0 4px 12px rgba(0,0,0,0.1); padding:15px; transition:transform 0.2s; }
     .item:hover { transform:translateY(-4px); }
     .item-name { font-weight:bold; font-size:1rem; margin:8px 0; color:#333; }
@@ -34,7 +61,7 @@
     <img src="images/IMG_banner.JPG" alt="サイトのバナー" class="banner">
   </header>
 
-  <h1>心盗夜 グッズ計算</h1>
+  <h1>2025FNC KINGDOM グッズ計算</h1>
 
   <div id="goods-list"></div>
 
