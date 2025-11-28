@@ -4,100 +4,29 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Kaisei+Opti&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kaisei+Opti&display=swap" rel="stylesheet">
   <title>心盗夜　グッズ計算</title>
+
   <style>
-    .banner {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
-
-    body {
-      font-family: "Kaisei Opti", sans-serif;
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(to bottom right, #f9f9f9, #ececec);
-      color: #333;
-    }
-
-    h1 {
-      text-align: center;
-      font-size: 2rem;
-      margin: 30px 0 20px;
-      color: #222;
-    }
-
-    #goods-list {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
-      padding: 20px 30px 40px;
-      max-width: 1000px;
-      margin: 0 auto;
-      box-sizing: border-box;
-    }
-
-    /* 🔹 カード */
-    .item {
-      background: #fff;
-      border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      padding: 15px;
-      text-align: center;
-      transition: transform 0.2s ease;
-    }
-
-    .item:hover {
-      transform: translateY(-4px);
-    }
-    .item img {
-  width: 100%;      /* 横幅はカードに合わせる */
-  height: auto;     /* 縦横比を維持して自動高さ */
-  border-radius: 12px;
-  margin-bottom: 10px;
-  display: block;   /* 不要な隙間を防ぐ */
-    }
-
-    .item-name {
-      font-weight: bold;
-      font-size: 1rem;
-      margin: 8px 0;
-      color: #333;
-    }
-
-    .item-price {
-      color: #555;
-      margin-bottom: 8px;
-      font-size: 0.95rem;
-    }
-
-    .item-qty {
-      width: 70px;
-      text-align: center;
-      font-size: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      padding: 4px;
-    }
-
-    /* 🔹 合計欄 */
-    #total {
-      margin: 40px auto;
-      text-align: center;
-      font-size: 1.5em;
-      font-weight: bold;
-      background: #fff;
-      border: 2px solid #ccc;
-      border-radius: 12px;
-      padding: 20px;
-      max-width: 400px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
-
+    .banner { width: 100%; height: auto; display: block; }
+    body { font-family: "Kaisei Opti", sans-serif; margin: 0; padding: 0; background: linear-gradient(to bottom right, #f9f9f9, #ececec); color: #333; }
+    h1 { text-align: center; font-size: 2rem; margin: 30px 0 20px; color: #222; }
+    #goods-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; padding: 20px 30px 40px; max-width: 1000px; margin: 0 auto; box-sizing: border-box; }
+    .item { background: #fff; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 15px; text-align: center; transition: transform 0.2s ease; }
+    .item:hover { transform: translateY(-4px); }
+    .item img { width: 100%; height: auto; border-radius: 12px; margin-bottom: 10px; display: block; }
+    .item-name { font-weight: bold; font-size: 1rem; margin: 8px 0; color: #333; }
+    .item-price { color: #555; margin-bottom: 8px; font-size: 0.95rem; }
+    .item-qty { width: 70px; text-align: center; font-size: 1rem; border: 1px solid #ccc; border-radius: 6px; padding: 4px; }
+    select { font-size: 0.9rem; padding: 5px; border-radius: 6px; border: 1px solid #ccc; margin-bottom: 6px; }
+    #total { margin: 40px auto 10px; text-align: center; font-size: 1.5em; font-weight: bold; background: #fff; border: 2px solid #ccc; border-radius: 12px; padding: 20px; max-width: 400px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    #summary { max-width: 600px; margin: 0 auto 50px; background: #fff; padding: 20px; border-radius: 10px; border: 1px solid #ccc; box-shadow: 0 3px 8px rgba(0,0,0,0.1); font-size: 0.95rem; }
+    #summary h2 { margin-top:0; font-size: 1.2rem; border-bottom:1px solid #ddd; padding-bottom:8px; }
+    .summary-item { margin: 6px 0; padding: 6px 0; border-bottom:1px dashed #ddd; }
   </style>
 </head>
+
 <body>
   <header>
     <img src="images/IMG_banner.JPG" alt="サイトのバナー" class="banner">
@@ -108,6 +37,11 @@
   <div id="goods-list"></div>
 
   <div id="total">合計: 0 円</div>
+
+  <div id="summary">
+    <h2>選んだ内容</h2>
+    <div id="summary-list">なし</div>
+  </div>
 
   <script>
     const imageUrls = [
@@ -124,19 +58,20 @@
       "images/IMG_0011.JPG",
     ];
 
+    /* 商品データ：Tシャツは2種類、その他は9種類 */
     const goods = [
-      { name: "マフラータオル", price: 2500 },
-      { name: "Tシャツ", price: 4000 },
-      { name: "フラッグ", price: 1000 },
-      { name: "サテン巾着", price: 1500 },
-      { name: "メタルキーチェーン", price: 1500 },
-      { name: "シュシュ", price: 1500 },
-      { name: "缶バッジホルダー", price: 1500 },
-      { name: "マット缶バッジ　A BAND", price: 500 },
-      { name: "マット缶バッジ　B ACTOR&DANCE", price: 500 },
-      { name: "ランダムトレカ　A BAND", price: 300 },
-      { name: "ランダムトレカ　B ACTOR&DANCE", price: 300 },
-    ]; 
+      { name: "マフラータオル", price: 2500, types: ["FTISLAND","CNBLUE","JUNGHAEIN","N.Flying","SF9","P1Harmony","Hi-Fi Un!corn","AMPERS&ONE","A×M×P"] },
+      { name: "Tシャツ", price: 4000, types: ["ash White","black"] },
+      { name: "フラッグ", price: 1000, types: ["FTISLAND","CNBLUE","JUNGHAEIN","N.Flying","SF9","P1Harmony","Hi-Fi Un!corn","AMPERS&ONE","A×M×P"] },
+      { name: "サテン巾着", price: 1500, types: ["FTISLAND","CNBLUE","JUNGHAEIN","N.Flying","SF9","P1Harmony","Hi-Fi Un!corn","AMPERS&ONE","A×M×P"] },
+      { name: "メタルキーチェーン", price: 1500, types: ["FTISLAND","CNBLUE","JUNGHAEIN","N.Flying","SF9","P1Harmony","Hi-Fi Un!corn","AMPERS&ONE","A×M×P"] },
+      { name: "シュシュ", price: 1500, types: ["FTISLAND","CNBLUE","JUNGHAEIN","N.Flying","SF9","P1Harmony","Hi-Fi Un!corn","AMPERS&ONE","A×M×P"] },
+      { name: "缶バッジホルダー", price: 1500, types: [] },
+      { name: "マット缶バッジ　A BAND", price: 500, types: [] },
+      { name: "マット缶バッジ　B ACTOR&DANCE", price: 500, types: [] },
+      { name: "ランダムトレカ　A BAND", price: 300, types: [] },
+      { name: "ランダムトレカ　B ACTOR&DANCE", price: 300, types: [] },
+    ];
 
     const container = document.getElementById("goods-list");
 
@@ -144,29 +79,58 @@
       const div = document.createElement("div");
       div.className = "item";
 
+      let typeSelectHTML = "";
+      if (item.types && item.types.length > 0) {
+        typeSelectHTML = `<select class="item-type" data-index="${index}">
+                            <option value="">タイプを選択</option>`;
+        item.types.forEach(typeName => {
+          typeSelectHTML += `<option value="${typeName}">${typeName}</option>`;
+        });
+        typeSelectHTML += `</select>`;
+      }
+
       div.innerHTML = `
         <img src="${imageUrls[index]}" alt="${item.name}" />
         <div class="item-name">${item.name}</div>
         <div class="item-price">${item.price}円</div>
+        ${typeSelectHTML}
         <input type="number" min="0" value="0" class="item-qty" data-index="${index}" />
       `;
 
       container.appendChild(div);
     });
 
-    const qtyInputs = document.querySelectorAll(".item-qty");
-    qtyInputs.forEach(input => {
-      input.addEventListener("input", () => {
-        let total = 0;
-        qtyInputs.forEach(input => {
-          const i = parseInt(input.dataset.index);
-          const quantity = parseInt(input.value) || 0;
-          total += goods[i].price * quantity;
-        });
-        document.getElementById("total").textContent = `合計: ${total.toLocaleString()} 円`;
+    function updateTotal() {
+      let total = 0;
+      let summaryHTML = "";
+
+      document.querySelectorAll(".item").forEach(div => {
+        const index = div.querySelector(".item-qty").dataset.index;
+        const qty = Number(div.querySelector(".item-qty").value) || 0;
+        if (qty === 0) return;
+
+        const typeSelect = div.querySelector(".item-type");
+        let type = "";
+        if (typeSelect) {
+          type = typeSelect.value;
+          if (type === "") return; // タイプ未選択はスキップ
+        }
+
+        const item = goods[index];
+        const subtotal = item.price * qty;
+        total += subtotal;
+
+        summaryHTML += `<div class="summary-item">
+                          ${item.name} ${type ? `(${type})` : ""} × ${qty} … <strong>${subtotal.toLocaleString()}円</strong>
+                        </div>`;
       });
-    });
+
+      document.getElementById("total").textContent = `合計: ${total.toLocaleString()} 円`;
+      document.getElementById("summary-list").innerHTML = summaryHTML || "なし";
+    }
+
+    document.querySelectorAll(".item-qty").forEach(input => input.addEventListener("input", updateTotal));
+    document.querySelectorAll(".item-type").forEach(select => select.addEventListener("change", updateTotal));
   </script>
 </body>
 </html>
-
